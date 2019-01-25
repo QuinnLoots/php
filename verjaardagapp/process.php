@@ -27,6 +27,7 @@ if (in_array(true, $_SESSION['error'])) {
     header('Location: addsongs.php');
 } elseif ($_SESSION['exists'] == true) {
     //is user bestaande: JA
+
     for ($j = 0; $j < 3; ++$j) {
         // if (check_song($j) == '') {
         if ($stmt2 = $mysqli->prepare('UPDATE songs SET song = ?, artist = ?  WHERE email = ? AND songid=?')) {

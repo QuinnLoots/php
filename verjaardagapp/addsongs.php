@@ -1,15 +1,30 @@
 <?php 
     session_start();
-
+    include 'config.php';
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 } else {
     header('Location: login.php');
 }
+$username = $mysqli->real_escape_string($_SESSION['gebruikernaam']);
+$email = $mysqli->real_escape_string($_SESSION['email']);
+// check if user exists by checking its query
+if ($stmt6 = $mysqli->prepare('SELECT count(1) FROM songs WHERE email=?')) {
+    $stmt6->bind_param('s', $email);
+    $stmt6->execute();
+    $stmt6->bind_result($found);
+    $stmt6->fetch();
+    if ($found) {
+        // echo 'true';
+        $_SESSION['exists'] = true;
+    } else {
+        //echo 'false';
+        $_SESSION['exists'] = false;
+    }
+    $stmt6->close();
+}
     $songs = [];
     $artists = [];
 include 'config.php';
-$username = $mysqli->real_escape_string($_SESSION['gebruikernaam']);
-$email = $mysqli->real_escape_string($_SESSION['email']);
 
 if ($_SESSION['exists'] == true) {
     //echo 'user exists';
@@ -36,7 +51,6 @@ if ($_SESSION['exists'] == true) {
         // Close the prepared statement.
         $stmt->close();
     }
-
     if ($stmt = $mysqli->prepare('SELECT boodschap FROM boodschap WHERE email=?')) {
         // Bind a variable to the parameter as a string.
         $stmt->bind_param('s', $email);
@@ -107,7 +121,7 @@ if ($_SESSION['exists'] == true) {
 } ?></label>
             <input type="text" id="song1" name="song1" value="<?php if (isset($songs[0])) {
     echo $songs[0];
-} ?>">
+} ?>" required>
 
 <br>
             Song name 2:<br>
@@ -116,7 +130,7 @@ if ($_SESSION['exists'] == true) {
 } ?></label>
             <input type="text" id="song2" name="song2" value="<?php if (isset($songs[1])) {
     echo $songs[1];
-} ?>">
+} ?>" required>
 
 <br>
             Song name 3:<br>
@@ -125,7 +139,7 @@ if ($_SESSION['exists'] == true) {
 } ?></label>
             <input type="text" name="song3" value="<?php if (isset($songs[2])) {
     echo $songs[2];
-} ?>">
+} ?>" required>
 
 <br>
         </div>
@@ -133,20 +147,20 @@ if ($_SESSION['exists'] == true) {
             Artist 1:<br>
             <input type="text" name="artist1" value="<?php if (isset($artists[0])) {
     echo $artists[0];
-} ?>"><br>
+} ?>" required><br>
             Artist 2:<br>
             <input type="text" name="artist2" value="<?php if (isset($artists[1])) {
     echo $artists[1];
-} ?>"><br>
+} ?>" required><br>
             Artist 3:<br>
             <input type="text" name="artist3" value="<?php if (isset($artists[2])) {
     echo $artists[2];
-} ?>"><br>
+} ?>" required><br>
 
         </div>
         <div class="middle">
             Boodschap:<br>
-            <textarea rows="4" cols="50" class="fullwidth" name="boodschap"><?php if (isset($boodschap)) {
+            <textarea rows="4" cols="50" class="fullwidth" name="boodschap" required><?php if (isset($boodschap)) {
     echo $boodschap;
 } ?></textarea><br><br>
             <button type="button" class="button button-block" name="back" id="back">Back</button>
