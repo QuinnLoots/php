@@ -118,6 +118,8 @@ if ($_SESSION['exists'] == true) {
             Song name 1:<br>
             <label for="song1"><?php if (isset($_SESSION['error'][0]) && $_SESSION['error'][0] == 1) {
     echo 'song1 already exists';
+} elseif (isset($_SESSION['error'][0]) && $_SESSION['error'][0] == 2) {
+    echo 'song1 updated';
 } ?></label>
             <input type="text" id="song1" name="song1" value="<?php if (isset($songs[0])) {
     echo $songs[0];
@@ -127,6 +129,8 @@ if ($_SESSION['exists'] == true) {
             Song name 2:<br>
             <label for="song2"><?php if (isset($_SESSION['error'][1]) && $_SESSION['error'][1] == 1) {
     echo 'song2 already exists';
+} elseif (isset($_SESSION['error'][1]) && $_SESSION['error'][1] == 2) {
+    echo 'song2 updated';
 } ?></label>
             <input type="text" id="song2" name="song2" value="<?php if (isset($songs[1])) {
     echo $songs[1];
@@ -136,6 +140,8 @@ if ($_SESSION['exists'] == true) {
             Song name 3:<br>
             <label for="song3"><?php if (isset($_SESSION['error'][2]) && $_SESSION['error'][2] == 1) {
     echo 'song3 already exists';
+} elseif (isset($_SESSION['error'][2]) && $_SESSION['error'][2] == 2) {
+    echo 'song3 updated';
 } ?></label>
             <input type="text" name="song3" value="<?php if (isset($songs[2])) {
     echo $songs[2];

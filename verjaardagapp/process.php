@@ -23,81 +23,85 @@ $username = $mysqli->real_escape_string($_SESSION['gebruikernaam']);
         }
     }
 
-if (in_array(true, $_SESSION['error'])) {
-    header('Location: addsongs.php');
-} elseif ($_SESSION['exists'] == true) {
-    //is user bestaande: JA
+ if ($_SESSION['exists'] == true) {
+     //is user bestaande: JA
 
-    for ($j = 0; $j < 3; ++$j) {
-        // if (check_song($j) == '') {
-        if ($stmt2 = $mysqli->prepare('UPDATE songs SET song = ?, artist = ?  WHERE email = ? AND songid=?')) {
-            $stmt2->bind_param('ssss', $songs[$j], $artists[$j], $email, $j);
-            if ($stmt2->execute()) {
-                echo 'song updated, ';
-            } else {
-                echo 'song not updated, ';
-            }
-            $stmt2->close();
-        }
-        //   }
-    }
-    // if (check_boodschap() == '') {
-    if ($stmt3 = $mysqli->prepare('UPDATE boodschap SET boodschap = ? WHERE email = ?')) {
-        $stmt3->bind_param('ss', $boodschap, $email);
-        if ($stmt3->execute()) {
-            echo 'boodschap updated, ';
-        } else {
-            echo 'boodschap not updated, ';
-        }
-        $stmt3->close();
-        //echo 'update complete';
-    }
+     for ($j = 0; $j < 3; ++$j) {
+         if ($_SESSION['error'][$j] == 0) {
+             $_SESSION['error'][$j] = 2;
+             // if (check_song($j) == '') {
+             if ($stmt2 = $mysqli->prepare('UPDATE songs SET song = ?, artist = ?  WHERE email = ? AND songid=?')) {
+                 $stmt2->bind_param('ssss', $songs[$j], $artists[$j], $email, $j);
+                 if ($stmt2->execute()) {
+                     echo 'song updated, ';
+                 } else {
+                     echo 'song not updated, ';
+                 }
+                 $stmt2->close();
+             }
+             //   }
+         }
+     }
+     // if (check_boodschap() == '') {
+     if ($stmt3 = $mysqli->prepare('UPDATE boodschap SET boodschap = ? WHERE email = ?')) {
+         $stmt3->bind_param('ss', $boodschap, $email);
+         if ($stmt3->execute()) {
+             echo 'boodschap updated, ';
+         } else {
+             echo 'boodschap not updated, ';
+         }
+         $stmt3->close();
+         //echo 'update complete';
+     }
 
-    header('Location: addsongs.php');
-//header('Refresh:0');
-  //  }
-} elseif ($_SESSION['exists'] == false) {
-    //is user bestaande: NEE
+     header('Location: addsongs.php');
+ //header('Refresh:0');
+ } elseif ($_SESSION['exists'] == false) {
+     //is user bestaande: NEE
+     //is er minstens één liedje bestaande (geen insert maar redirect)
+     if (in_array(true, $_SESSION['error'])) {
+         header('Location: addsongs.php');
+     }
 
-    for ($i = 0; $i < 3; ++$i) {
-        // if (check_song($i) == '') {
-        if ($stmt4 = $mysqli->prepare('INSERT INTO songs (song, artist, email,songid) VALUES (?, ?, ?,?)')) {
-            // Bind the variables to the parameter as strings.
-            $stmt4->bind_param('ssss', $songs[$i], $artists[$i], $email, $i);
+     for ($i = 0; $i < 3; ++$i) {
+         // if (check_song($i) == '') {
+         if ($stmt4 = $mysqli->prepare('INSERT INTO songs (song, artist, email,songid) VALUES (?, ?, ?,?)')) {
+             // Bind the variables to the parameter as strings.
+             $stmt4->bind_param('ssss', $songs[$i], $artists[$i], $email, $i);
 
-            // Execute the statement.
-            //$stmt->execute();
-            if ($stmt4->execute()) {
-                echo 'song added, ';
-            } else {
-                echo 'song not added, ';
-            }
+             // Execute the statement.
+             //$stmt->execute();
+             if ($stmt4->execute()) {
+                 echo 'song added, ';
+             } else {
+                 echo 'song not added, ';
+             }
 
-            // Close the prepared statement.
-            $stmt4->close();
-        }
-        //  }
-    }
-    // if (check_boodschap() == '') {
-    if ($stmt5 = $mysqli->prepare('INSERT INTO boodschap (boodschap, email) VALUES (?, ?)')) {
-        // Bind the variables to the parameter as strings.
-        $stmt5->bind_param('ss', $boodschap, $email);
+             // Close the prepared statement.
+             $stmt4->close();
+         }
+         //  }
+     }
+     // if (check_boodschap() == '') {
+     if ($stmt5 = $mysqli->prepare('INSERT INTO boodschap (boodschap, email) VALUES (?, ?)')) {
+         // Bind the variables to the parameter as strings.
+         $stmt5->bind_param('ss', $boodschap, $email);
 
-        // Execute the statement.
-        //$stmt->execute();
-        if ($stmt5->execute()) {
-            echo 'boodschap added, ';
-        } else {
-            echo 'boodschap not added, ';
-        }
+         // Execute the statement.
+         //$stmt->execute();
+         if ($stmt5->execute()) {
+             echo 'boodschap added, ';
+         } else {
+             echo 'boodschap not added, ';
+         }
 
-        // Close the prepared statement.
-        $stmt5->close();
-    }
-    // }
+         // Close the prepared statement.
+         $stmt5->close();
+     }
+     // }
 
-    $_SESSION['exists'] = true;
-    header('Location: addsongs.php');
-}
+     $_SESSION['exists'] = true;
+     header('Location: addsongs.php');
+ }
 
 ?>
