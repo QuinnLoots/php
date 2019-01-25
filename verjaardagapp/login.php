@@ -4,7 +4,7 @@
 include 'config.php';
 include './securimage/securimage.php';
 session_start();
-
+$_SESSION['error'][0] = $_SESSION['error'][1] = $_SESSION['error'][2] = 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -82,6 +82,7 @@ session_start();
                     header('Location: addsongs.php');
                 }
             } else { // User exists
+                $_SESSION['gebruikernaam'] = $username;
                 $_SESSION['loggedin'] = true;
                 $_SESSION['exists'] = true;
                 $_SESSION['email'] = $email;
